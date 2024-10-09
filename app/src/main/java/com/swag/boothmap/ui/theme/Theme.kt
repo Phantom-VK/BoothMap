@@ -1,6 +1,5 @@
 package com.swag.boothmap.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,28 +8,35 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Blue80,
+    secondary = Orange80,
+    tertiary = Teal80,
+    background = Gray20,
+    surface = Gray10DT,
+    onPrimary = Gray10DT,
+    onSecondary = Gray10DT,
+    onTertiary = Gray10DT,
+    onBackground = Gray95Dt,
+    onSurface = Gray95Dt,
+    error = ErrorColor
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = Blue40,
+    secondary = Orange40,
+    tertiary = Teal40,
+    background = Gray90,
+    surface = Gray95Lt,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onBackground = Gray10Lt,
+    onSurface = Gray10Lt,
+    error = ErrorColor
 )
 
 @Composable
