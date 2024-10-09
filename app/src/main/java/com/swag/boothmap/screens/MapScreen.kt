@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -47,6 +48,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.swag.boothmap.screens.components.SearchBar
 
 @Composable
 fun Mapscreen(
@@ -76,9 +78,7 @@ fun Mapscreen(
         GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .clip(RoundedCornerShape(16.dp))
-                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
+                .padding(paddingValues),
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
@@ -103,20 +103,26 @@ fun Mapscreen(
         }
 
         selectedLocation?.let { location ->
+
+            val backgroundColor = Color(0xFFFDD692)
+            val contentColor = Color(0xFFFFF3ED)
             Card(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = paddingValues.calculateTopPadding())
-                    .width(300.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .width(260.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = backgroundColor,
+                    contentColor = contentColor
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-
-                    Row (
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Absolute.SpaceBetween
-                    ){
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(location.title, style = MaterialTheme.typography.titleMedium)
                         IconButton(onClick = { selectedLocation = null }) {
                             Icon(Icons.Filled.Close, contentDescription = "Close")
@@ -126,7 +132,11 @@ fun Mapscreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = { /* TODO: Navigate to details screen */ },
-                        modifier = Modifier.align(Alignment.End)
+                        modifier = Modifier.align(Alignment.End),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = contentColor,
+                            contentColor = backgroundColor
+                        )
                     ) {
                         Text("View Details")
                     }
@@ -134,14 +144,7 @@ fun Mapscreen(
             }
         }
 
-        FloatingActionButton(
-            onClick = { /* TODO: Implement search location*/ },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = paddingValues.calculateTopPadding(), start = paddingValues.calculateStartPadding(LayoutDirection.Ltr))
-        ) {
-            Icon(Icons.Filled.Search, contentDescription = "Search Location")
-        }
+        SearchBar(paddingValues)
 
 
     }

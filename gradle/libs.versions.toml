@@ -15,6 +15,8 @@ mapsUtilsKtx = "5.1.1"
 playServicesLocation = "21.3.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseStorage = "21.0.1"
+navigationRuntimeKtx = "2.8.2"
+navigationCompose = "2.8.2"
 
 [libraries]
 android-maps-utils = { module = "com.google.maps.android:android-maps-utils", version.ref = "androidMapsUtils" }
@@ -38,6 +40,8 @@ maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = 
 maps-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "mapsUtilsKtx" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

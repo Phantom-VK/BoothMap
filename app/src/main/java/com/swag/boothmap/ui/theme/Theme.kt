@@ -12,31 +12,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue80,
-    secondary = Orange80,
-    tertiary = Teal80,
-    background = Gray20,
-    surface = Gray10DT,
-    onPrimary = Gray10DT,
-    onSecondary = Gray10DT,
-    onTertiary = Gray10DT,
-    onBackground = Gray95Dt,
-    onSurface = Gray95Dt,
-    error = ErrorColor
+    primary = Color(0xFF191716),
+//    secondary = Orange80,
+//    tertiary = Teal80,
+//    background = Gray20,
+//    surface = Gray10DT,
+//    onPrimary = Gray10DT,
+//    onSecondary = Gray10DT,
+//    onTertiary = Gray10DT,
+//    onBackground = Gray95Dt,
+//    onSurface = Gray95Dt,
+//    error = ErrorColor
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue40,
-    secondary = Orange40,
-    tertiary = Teal40,
-    background = Gray90,
-    surface = Gray95Lt,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Gray10Lt,
-    onSurface = Gray10Lt,
-    error = ErrorColor
+    primary = Color(0xFFFFF3ED),
+//    secondary = Orange40,
+//    tertiary = Teal40,
+//    background = Gray90,
+//    surface = Gray95Lt,
+//    onPrimary = Color.White,
+//    onSecondary = Color.White,
+//    onTertiary = Color.White,
+//    onBackground = Gray10Lt,
+//    onSurface = Gray10Lt,
+//    error = ErrorColor
 )
 
 @Composable
