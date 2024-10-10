@@ -1,6 +1,6 @@
 package com.swag.boothmap.screens
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,32 +12,32 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.google.android.gms.maps.model.LatLng
 import com.swag.boothmap.R
+import com.swag.boothmap.screens.components.SearchBar
+import com.swag.boothmap.viewmodels.LocationDataViewModel
 
-sealed class Screen(val route: String) {
-    object Mapscreen : Screen("Map")
-
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffoldScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: LocationDataViewModel = viewModel()
 ) {
-//    val isDarkTheme = isSystemInDarkTheme()
     val mapStyle = R.raw.map_light_style
 
-    var currentScreen by remember { mutableStateOf<Screen>(Screen.Mapscreen) }
+    val cities by viewModel.listOfCities.collectAsState()
+    val selectedCity by viewModel.selectedCity.collectAsState()
+    val locations by viewModel.locations.collectAsState()
 
     Scaffold(
         topBar = {
@@ -51,7 +51,6 @@ fun MainScaffoldScreen(
                         fontSize = 30.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
-
                     )
                 },
                 actions = {
@@ -72,11 +71,17 @@ fun MainScaffoldScreen(
         }
     ) { paddingValues ->
 
-        Mapscreen(mapStyle, paddingValues)
-//        when (currentScreen) {
-//            Screen.Mapscreen ->
-//
-//        }
+
+            Mapscreen(
+                mapStyle = mapStyle,
+                paddingValues = paddingValues,
+                locations = locations,
+                currentCity = locations.firstOrNull()?.position ?: LatLng(19.1383, 77.3210),
+                cities = cities.keys.toList(),
+                selectedCity = selectedCity,
+                onCitySelected = { city -> viewModel.selectCity(city) }
+            )
+
     }
 }
 
