@@ -1,13 +1,12 @@
 package com.swag.boothmap.screens.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,57 +32,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    paddingValues: PaddingValues,
     cities: List<String>,
+    talukas: List<String>,
     selectedCity: String?,
-    onCitySelected: (String) -> Unit
+    selectedTaluka: String?,
+    onCitySelected: (String) -> Unit,
+    onTalukaSelected: (String) -> Unit
 ) {
     var expandedCity by remember { mutableStateOf(false) }
+    var expandedTaluka by remember { mutableStateOf(false) }
 
-    Row(
+    val saffron = Color(0xFFFF9933)
+    val white = Color(0xFFFFFFFF)
+    val green = Color(0xFF138808)
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                top = paddingValues.calculateTopPadding() + 10.dp,
-                start = paddingValues.calculateStartPadding(LayoutDirection.Ltr) + 10.dp,
-                end = paddingValues.calculateEndPadding(LayoutDirection.Rtl) + 10.dp
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+            .padding(16.dp)
+            .background(white, RoundedCornerShape(8.dp))
+            .border(1.dp, green, RoundedCornerShape(8.dp))
     ) {
+        // City Dropdown
         ExposedDropdownMenuBox(
             expanded = expandedCity,
             onExpandedChange = { expandedCity = !expandedCity },
             modifier = Modifier
-                .weight(1f)
-                .height(50.dp)
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             OutlinedButton(
                 onClick = { expandedCity = true },
-                colors = ButtonDefaults.buttonColors(Color(0xFFFDD692)),
-                border = BorderStroke(1.dp, Color.White),
-                shape = RoundedCornerShape(20),
-                modifier = Modifier.menuAnchor()
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = saffron,
+                    contentColor = white
+                ),
+                border = BorderStroke(1.dp, green),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             ) {
                 Text(
                     text = selectedCity ?: "Select City",
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.Medium,
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                    color = Color.White
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    color = white
                 )
+                Spacer(Modifier.weight(1f))
                 Icon(
-                    modifier = Modifier.size(30.dp),
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = "City",
-                    tint = Color.White
+                    tint = white
                 )
             }
             ExposedDropdownMenu(
@@ -102,40 +108,66 @@ fun SearchBar(
             }
         }
 
-        Spacer(Modifier.weight(0.15f))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedButton(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color(0xFFFDD692)),
-            border = BorderStroke(1.dp, Color.White),
-            shape = RoundedCornerShape(20),
+        // Taluka Dropdown
+        ExposedDropdownMenuBox(
+            expanded = expandedTaluka,
+            onExpandedChange = { expandedTaluka = !expandedTaluka },
             modifier = Modifier
-                .height(50.dp)
-                .weight(1f)
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
-            Text(
-                text = "Taluka",
-                fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Medium,
-                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                color = Color.White
-            )
-            Icon(
-                modifier = Modifier.size(30.dp),
-                imageVector = Icons.Filled.ArrowDropDown,
-                contentDescription = "Taluka",
-                tint = Color.White
-            )
+            OutlinedButton(
+                onClick = { expandedTaluka = true },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = green,
+                    contentColor = white
+                ),
+                border = BorderStroke(1.dp, saffron),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = selectedTaluka ?: "Select Taluka",
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    color = white
+                )
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "Taluka",
+                    tint = white
+                )
+            }
+            ExposedDropdownMenu(
+                expanded = expandedTaluka,
+                onDismissRequest = { expandedTaluka = false }
+            ) {
+                talukas.forEach { taluka ->
+                    DropdownMenuItem(
+                        text = { Text(taluka) },
+                        onClick = {
+                            onTalukaSelected(taluka)
+                            expandedTaluka = false
+                        }
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SearchBarPreview(){
-    SearchBar(
-        paddingValues = PaddingValues(),
-        cities = listOf("Parbhani", "Nanded", "Aurangabad", "Latur"),
-        selectedCity = "Parbhani",
-        onCitySelected = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SearchBarPreview(){
+//    SearchBar(
+//        paddingValues = PaddingValues(),
+//        cities = listOf("Parbhani", "Nanded", "Aurangabad", "Latur"),
+//        selectedCity = "Parbhani",
+//        onCitySelected = {})
+//}

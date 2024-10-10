@@ -1,6 +1,5 @@
 package com.swag.boothmap.screens
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.android.gms.maps.model.LatLng
 import com.swag.boothmap.R
-import com.swag.boothmap.screens.components.SearchBar
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 
@@ -35,8 +33,7 @@ fun MainScaffoldScreen(
 ) {
     val mapStyle = R.raw.map_light_style
 
-    val cities by viewModel.listOfCities.collectAsState()
-    val selectedCity by viewModel.selectedCity.collectAsState()
+
     val locations by viewModel.locations.collectAsState()
 
     Scaffold(
@@ -76,10 +73,7 @@ fun MainScaffoldScreen(
                 mapStyle = mapStyle,
                 paddingValues = paddingValues,
                 locations = locations,
-                currentCity = locations.firstOrNull()?.position ?: LatLng(19.1383, 77.3210),
-                cities = cities.keys.toList(),
-                selectedCity = selectedCity,
-                onCitySelected = { city -> viewModel.selectCity(city) }
+                currentCity = locations.firstOrNull()?.position ?: LatLng(19.1383, 77.3210)
             )
 
     }

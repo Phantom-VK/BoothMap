@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.swag.boothmap.screens.CitySelectionScreen
 import com.swag.boothmap.screens.MainScaffoldScreen
 import com.swag.boothmap.screens.SplashScreen
 
@@ -25,6 +26,10 @@ fun Navigation(
 
         composable(Screen.Splashscreen.route) {
             SplashScreen(navController = navController)
+        }
+
+        composable(Screen.CitySelectionScreen.route) {
+            CitySelectionScreen(navController = navController)
         }
     }
 }

@@ -51,10 +51,7 @@ fun Mapscreen(
     mapStyle: Int,
     paddingValues: PaddingValues,
     locations: List<MapLocation> = emptyList(),
-    currentCity: LatLng = LatLng(19.1383, 77.3210),
-    cities: List<String>,
-    selectedCity: String?,
-    onCitySelected: (String) -> Unit
+    currentCity: LatLng = LatLng(19.1383, 77.3210)
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentCity, 13f)
@@ -136,12 +133,7 @@ fun Mapscreen(
             }
         }
 
-        SearchBar(
-            paddingValues = paddingValues,
-            cities = cities,
-            selectedCity = selectedCity,
-            onCitySelected = onCitySelected
-        )
+
     }
 }
 
