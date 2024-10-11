@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.compose.rememberNavController
 import com.swag.boothmap.navigation.Navigation
 import com.swag.boothmap.ui.theme.BoothMapTheme
+import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -19,7 +20,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             BoothMapTheme {
 
-                    Navigation(navController = rememberNavController(), paddingValues = PaddingValues())
+                    Navigation(navController = rememberNavController(),
+                        paddingValues = PaddingValues(),
+                        viewModel = LocationDataViewModel()
+                    )
 
             }
         }

@@ -33,10 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -48,6 +46,9 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.swag.boothmap.datacalsses.Booth
+import com.swag.boothmap.ui.theme.green
+import com.swag.boothmap.ui.theme.saffron
+import com.swag.boothmap.ui.theme.white
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 @Composable
@@ -55,11 +56,9 @@ fun Mapscreen(
     mapStyle: Int,
     paddingValues: PaddingValues,
     selectedCity:String,
-    viewModel: LocationDataViewModel = viewModel()
+    viewModel: LocationDataViewModel
 ) {
-    viewModel.selectCity(selectedCity)
     val booths by viewModel.booths.collectAsState()
-    Log.d("Mapscreen", "Booths: $booths")
 
 
 
@@ -123,7 +122,7 @@ fun Mapscreen(
                     .width(260.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFDD692),
+                    containerColor = saffron,
                     contentColor = Color(0xFFFFF3ED)
                 )
             ) {
@@ -146,8 +145,8 @@ fun Mapscreen(
                         onClick = { /* TODO: Navigate to details screen */ },
                         modifier = Modifier.align(Alignment.End),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFFF3ED),
-                            contentColor = Color(0xFFFDD692)
+                            containerColor = green,
+                            contentColor = white
                         )
                     ) {
                         Text("View Details")
@@ -157,16 +156,5 @@ fun Mapscreen(
         }
     }
 }
-data class MapLocation(
-    val position: LatLng,
-    val title: String,
-    val snippet: String,
-    val color: Color
-)
 
-// Helper function to convert Color to hue for BitmapDescriptorFactory
-fun hueFromColor(color: Color): Float {
-    val hsv = FloatArray(3)
-    android.graphics.Color.colorToHSV(color.toArgb(), hsv)
-    return hsv[0]
-}
+

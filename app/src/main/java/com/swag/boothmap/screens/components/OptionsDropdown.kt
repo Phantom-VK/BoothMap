@@ -26,10 +26,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.swag.boothmap.ui.theme.green
+import com.swag.boothmap.ui.theme.saffron
+import com.swag.boothmap.ui.theme.white
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,9 +50,7 @@ fun OptionsDropdown(
 
 
 
-    val saffron = Color(0xFFFF9933)
-    val white = Color(0xFFFFFFFF)
-    val green = Color(0xFF138808)
+
 
     Column(
         modifier = Modifier

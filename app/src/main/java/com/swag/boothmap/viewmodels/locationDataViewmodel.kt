@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.swag.boothmap.datacalsses.Booth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import android.util.Log
 
 
 class LocationDataViewModel : ViewModel() {
@@ -80,6 +79,6 @@ class LocationDataViewModel : ViewModel() {
     }
 
     fun getListOfTalukas(): List<String> {
-        return listOfBooths[_selectedCity.value]?.map { it.taluka }?.distinct() ?: emptyList()
+        return listOfBooths[_selectedCity.value]?.map { it.taluka } ?: emptyList()
     }
 }

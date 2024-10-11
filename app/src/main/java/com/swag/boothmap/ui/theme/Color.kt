@@ -23,3 +23,7 @@ import androidx.compose.ui.graphics.Color
 //// Additional Colors
 //val ErrorColor = Color(0xFFB00020)
 //val SuccessColor = Color(0xFF4CAF50)
+
+val saffron = Color(0xFFFF9933)
+val white = Color(0xFFFFFFFF)
+val green = Color(0xFF138808)

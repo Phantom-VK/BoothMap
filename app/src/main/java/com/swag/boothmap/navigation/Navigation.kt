@@ -13,13 +13,15 @@ import androidx.navigation.navArgument
 import com.swag.boothmap.screens.CitySelectionScreen
 import com.swag.boothmap.screens.MainScaffoldScreen
 import com.swag.boothmap.screens.SplashScreen
+import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(
     navController: NavHostController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewModel: LocationDataViewModel
 ) {
     NavHost(navController = navController, startDestination = Screen.Splashscreen.route) {
         composable(route = Screen.MainScaffoldScreen.route+"/{selectedCity}", arguments = listOf(
@@ -28,7 +30,7 @@ fun Navigation(
             })) {
 
                 it.arguments?.getString("selectedCity")
-                    ?.let { it1 -> MainScaffoldScreen(navController, it1) }
+                    ?.let { it1 -> MainScaffoldScreen(navController, it1, viewModel = viewModel) }
         }
 
         composable(Screen.Splashscreen.route) {
@@ -36,7 +38,7 @@ fun Navigation(
         }
 
         composable(Screen.CitySelectionScreen.route) {
-            CitySelectionScreen(navController = navController)
+            CitySelectionScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
