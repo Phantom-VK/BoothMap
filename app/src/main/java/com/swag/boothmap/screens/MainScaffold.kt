@@ -11,8 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -20,7 +18,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.google.android.gms.maps.model.LatLng
 import com.swag.boothmap.R
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
@@ -29,12 +26,12 @@ import com.swag.boothmap.viewmodels.LocationDataViewModel
 @Composable
 fun MainScaffoldScreen(
     navHostController: NavHostController,
+    selectedCity: String,
     viewModel: LocationDataViewModel = viewModel()
 ) {
     val mapStyle = R.raw.map_light_style
 
 
-    val locations by viewModel.locations.collectAsState()
 
     Scaffold(
         topBar = {
@@ -72,8 +69,8 @@ fun MainScaffoldScreen(
             Mapscreen(
                 mapStyle = mapStyle,
                 paddingValues = paddingValues,
-                locations = locations,
-                currentCity = locations.firstOrNull()?.position ?: LatLng(19.1383, 77.3210)
+                selectedCity = selectedCity,
+                viewModel = viewModel
             )
 
     }

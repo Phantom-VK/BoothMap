@@ -1,5 +1,6 @@
 package com.swag.boothmap.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.swag.boothmap.R
 import com.swag.boothmap.navigation.Screen
-import com.swag.boothmap.screens.components.SearchBar
+import com.swag.boothmap.screens.components.OptionsDropdown
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 @Composable
@@ -35,10 +36,14 @@ fun CitySelectionScreen(
     navController: NavController,
     viewModel: LocationDataViewModel = viewModel()
 ){
-    val cities by viewModel.listOfCities.collectAsState()
     val selectedCity by viewModel.selectedCity.collectAsState()
+    val selectedTaluka by viewModel.selectedTaluka.collectAsState()
+    val cities = viewModel.listOfCities
+    val talukas = viewModel.getListOfTalukas()
+
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color.White),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,11 +57,10 @@ fun CitySelectionScreen(
             Image(
                 painter = painterResource(id = R.drawable.eelection_commission_logo),
                 contentDescription = "App Logo",
-
-                )
+            )
         }
         Text(
-            "Select City",
+            "Select Location",
             color = Color.Black,
             fontStyle = FontStyle.Normal,
             fontWeight = FontWeight.Medium,
@@ -65,33 +69,26 @@ fun CitySelectionScreen(
             overflow = TextOverflow.Ellipsis
         )
 
-        SearchBar(
-            cities = cities.keys.toList(),
-            selectedCity = selectedCity,
-            onCitySelected = { city -> viewModel.selectCity(city)},
-            talukas = cities.keys.toList(),  //TODO Get Taluka List instead of cities
-            selectedTaluka = null,
-            onTalukaSelected = {}
+        OptionsDropdown(
+            cities = cities,
+            talukas = talukas,
+            viewModel = viewModel
         )
 
-        Button(onClick = {
-            navController.navigate(Screen.MainScaffoldScreen.route)
-        },
-            colors = ButtonColors(
-                contentColor = Color.White,
+        Button(
+            onClick = {
+                navController.navigate(Screen.MainScaffoldScreen.route+"/$selectedCity")
+                Log.d("Mapscreen", "Selected city: $selectedCity")
+            },
+            colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF000080),
-                disabledContainerColor = Color.Gray,
-                disabledContentColor = Color.White
-
-            )
-        ){
-            Text(text = "Locate Booths",
-                color = Color.White)
+                contentColor = Color.White,
+            ),
+            enabled = selectedCity != null && selectedTaluka != null
+        ) {
+            Text(text = "Locate Booths", color = Color.White)
         }
-
-
     }
-
 }
 
 
