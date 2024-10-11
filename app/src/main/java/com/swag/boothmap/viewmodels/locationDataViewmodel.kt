@@ -53,7 +53,10 @@ class LocationDataViewModel : ViewModel() {
             Booth(name = "Ganjgolai Booth", id = "LTR004", latitude = 18.3967, longitude = 76.5457, district = "Latur", taluka = "Ganjgolai", bloName = "Wendy Taylor", bloContact = "5678901234"),
             Booth(name = "Shivaji Nagar Booth", id = "LTR005", latitude = 18.4141, longitude = 76.5744, district = "Latur", taluka = "Shivaji Nagar", bloName = "Xavier Chen", bloContact = "6789012345"),
             Booth(name = "Barshi Road Booth", id = "LTR006", latitude = 18.3935, longitude = 76.5811, district = "Latur", taluka = "Barshi Road", bloName = "Yara Johnson", bloContact = "7890123456"),
-            Booth(name = "Gandhi Chowk Booth", id = "LTR007", latitude = 18.4208, longitude = 76.5534, district = "Latur", taluka = "Gandhi Chowk", bloName = "Zack Anderson", bloContact = "8901234567")
+            Booth(name = "Gandhi Chowk Booth", id = "LTR007", latitude = 18.4208, longitude = 76.5534, district = "Latur", taluka = "Gandhi Chowk", bloName = "Zack Anderson", bloContact = "8901234567"),
+            Booth(name = "Gandhi Chowk Booth2", id = "LTR007", latitude = 18.4212, longitude = 76.5536, district = "Latur", taluka = "Gandhi Chowk", bloName = "Zack Anderson", bloContact = "8901234567")
+
+
         )
     )
 
@@ -79,6 +82,6 @@ class LocationDataViewModel : ViewModel() {
     }
 
     fun getListOfTalukas(): List<String> {
-        return listOfBooths[_selectedCity.value]?.map { it.taluka } ?: emptyList()
+        return listOfBooths[_selectedCity.value]?.map { it.taluka }?.distinct()?: emptyList()
     }
 }
