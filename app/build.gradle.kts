@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.analytics)
 
+    //for image slider
+    implementation(libs.coil.compose)
+
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
