@@ -40,5 +40,9 @@ fun Navigation(
         composable(Screen.CitySelectionScreen.route) {
             CitySelectionScreen(navController = navController, viewModel = viewModel)
         }
+
+        composable(Screen.BoothdetailsScreen.route) {
+            //TODO() Parse an object through navigation
+        }
     }
 }

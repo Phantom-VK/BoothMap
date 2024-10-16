@@ -37,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -166,21 +165,21 @@ fun InfoItem(label: String, value: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BoothDetailsScreenPreview() {
-    BoothDetailsScreen(
-        navController = NavController(LocalContext.current),
-        booth = Booth(
-            name = "Parbhani Central Booth",
-            id = "PRB001",
-            latitude = 19.2645,
-            longitude = 76.7816,
-            district = "Parbhani",
-            taluka = "Parbhani City",
-            bloName = "John Doe",
-            bloContact = "1234567890"
-        )
-    )
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun BoothDetailsScreenPreview() {
+//    BoothDetailsScreen(
+//        navController = NavController(LocalContext.current),
+//        booth = Booth(
+//            name = "Parbhani Central Booth",
+//            id = "PRB001",
+//            latitude = 19.2645,
+//            longitude = 76.7816,
+//            district = "Parbhani",
+//            taluka = "Parbhani City",
+//            bloName = "John Doe",
+//            bloContact = "1234567890"
+//        )
+//    )
+//
+//}

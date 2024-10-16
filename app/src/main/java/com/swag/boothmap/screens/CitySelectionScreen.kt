@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,22 +24,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.swag.boothmap.R
 import com.swag.boothmap.navigation.Screen
 import com.swag.boothmap.screens.components.OptionsDropdown
 import com.swag.boothmap.viewmodels.LocationDataViewModel
+import com.swag.boothmap.viewmodels.UiState
 
 @Composable
 fun CitySelectionScreen(
     navController: NavController,
     viewModel: LocationDataViewModel
-
-){
+) {
     val selectedCity by viewModel.selectedCity.collectAsState()
     val selectedTaluka by viewModel.selectedTaluka.collectAsState()
-    val cities = viewModel.listOfCities
+    val uiState by viewModel.uiState.collectAsState()
+    val cities = viewModel.getListOfCities()
     val talukas = viewModel.getListOfTalukas()
 
     Column(
@@ -45,46 +51,86 @@ fun CitySelectionScreen(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .wrapContentSize()
-                .background(Color.White)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.eelection_commission_logo),
-                contentDescription = "App Logo",
-            )
-        }
-        Text(
-            "Select Location",
-            color = Color.Black,
-            fontStyle = FontStyle.Normal,
-            fontWeight = FontWeight.Medium,
-            fontSize = 30.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+        Logo()
+        Title()
+        OptionsDropdown(cities = cities, talukas = talukas, viewModel = viewModel)
+        NavigationButton(
+            navController = navController,
+            selectedCity = selectedCity,
+            selectedTaluka = selectedTaluka,
+            isLoading = uiState is UiState.LoadingBooths
         )
+    }
 
-        OptionsDropdown(
-            cities = cities,
-            talukas = talukas,
-            viewModel = viewModel
+    // Error handling
+    if (uiState is UiState.Error) {
+        ErrorDialog(message = (uiState as UiState.Error).message)
+    }
+}
+
+@Composable
+private fun Logo() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.wrapContentSize()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.eelection_commission_logo),
+            contentDescription = "App Logo",
         )
+    }
+}
 
-        Button(
-            onClick = {
-                navController.navigate(Screen.MainScaffoldScreen.route+"/$selectedCity")
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF000080),
-                contentColor = Color.White,
-            ),
-            enabled = selectedCity != null && selectedTaluka != null
-        ) {
+@Composable
+private fun Title() {
+    Text(
+        "Select Location",
+        color = Color.Black,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Medium,
+        fontSize = 30.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+private fun NavigationButton(
+    navController: NavController,
+    selectedCity: String?,
+    selectedTaluka: String?,
+    isLoading: Boolean
+) {
+    Button(
+        onClick = {
+            navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity")
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF000080),
+            contentColor = Color.White,
+        ),
+        enabled = selectedCity != null && selectedTaluka != null && !isLoading
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+        } else {
             Text(text = "Locate Booths", color = Color.White)
         }
     }
+}
+
+@Composable
+private fun ErrorDialog(message: String) {
+    AlertDialog(
+        onDismissRequest = { },
+        title = { Text("Error") },
+        text = { Text(message) },
+        confirmButton = {
+            TextButton(onClick = { }) {
+                Text("OK")
+            }
+        }
+    )
 }
 
 

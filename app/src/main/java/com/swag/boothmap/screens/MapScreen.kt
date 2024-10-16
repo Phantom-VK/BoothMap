@@ -1,6 +1,5 @@
 package com.swag.boothmap.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,18 +60,7 @@ fun Mapscreen(
     val booths by viewModel.booths.collectAsState()
 
 
-
-//TODO() Fix selected location
-
-    val initialLocation = selectedCity.let {
-        when (it) {
-            "Nanded" -> LatLng(19.1383, 77.3210)
-            "Parbhani" -> LatLng(19.2645, 76.7816)
-            "Aurangabad" -> LatLng(19.8762, 75.3433)
-            "Latur" -> LatLng(18.4088, 76.5604)
-            else -> LatLng(19.1383, 77.3210) // Default to Nanded if unknown
-        }
-    }
+    val initialLocation = booths[0].let { LatLng(it.latitude, it.longitude) }
 
 
     val cameraPositionState = rememberCameraPositionState {
