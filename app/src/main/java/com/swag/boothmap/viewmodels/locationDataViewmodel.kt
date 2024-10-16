@@ -36,7 +36,7 @@ class LocationDataViewModel : ViewModel() {
                 listOfCities = database.fetchCities()
                 _uiState.value = UiState.CitiesLoaded
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message ?: "Error fetching cities")
+                _uiState.value = UiState.Error(e.localizedMessage ?: "Error fetching cities")
             }
         }
     }
@@ -48,7 +48,7 @@ class LocationDataViewModel : ViewModel() {
                 _booths.value = database.fetchBooths(city)
                 _uiState.value = UiState.BoothsLoaded
             } catch (e: Exception) {
-                _uiState.value = UiState.Error(e.message ?: "Error fetching booths")
+                _uiState.value = UiState.Error(e.localizedMessage ?: "Error fetching booths")
             }
         }
     }

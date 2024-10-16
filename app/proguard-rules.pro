@@ -11,8 +11,27 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepattributes Signature
+-keepattributes *Annotation*
 
--keep class com.swag.boothmap.datacalsses.Booth{*;}
+# Keep the Booth model class and its members
+-keepclassmembers class com.swag.boothmap.datacalsses.Booth { *; }
+
+# Keep Firebase database classes and members
+-keepclassmembers class com.google.firebase.database.** { *; }
+
+# Keep all annotations (important for Firebase serialization)
+-keepattributes *Annotation*
+
+# Keep Firebase DataSnapshot (this helps prevent Firebase-specific serialization issues)
+-keep class com.google.firebase.database.DataSnapshot { *; }
+
+# Keep Kotlin data classes (if any other Kotlin data classes are involved)
+-keepclassmembers class **Kt$ { *; }
+
+# Keep methods used by Kotlin coroutines (since you're using coroutines)
+-keepclassmembers class kotlinx.coroutines.** { *; }
+
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.

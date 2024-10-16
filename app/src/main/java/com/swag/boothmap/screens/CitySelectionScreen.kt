@@ -1,5 +1,7 @@
 package com.swag.boothmap.screens
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +46,13 @@ fun CitySelectionScreen(
     val uiState by viewModel.uiState.collectAsState()
     val cities = viewModel.getListOfCities()
     val talukas = viewModel.getListOfTalukas()
+
+    val context = LocalContext.current
+
+    BackHandler {
+        // Exit the app when back button is pressed
+        (context as? Activity)?.finish()
+    }
 
     Column(
         modifier = Modifier
