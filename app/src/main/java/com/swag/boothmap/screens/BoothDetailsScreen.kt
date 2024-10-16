@@ -1,77 +1,91 @@
-package com.swag.boothmap.screens
-
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.swag.boothmap.datacalsses.Booth
+import com.swag.boothmap.ui.theme.green
+import com.swag.boothmap.ui.theme.saffron
+import com.swag.boothmap.ui.theme.white
+import com.swag.boothmap.viewmodels.BoothViewmodel
 import kotlinx.coroutines.delay
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoothDetailsScreen(
     navController: NavController,
-    booth: Booth
+    viewmodel: BoothViewmodel
 ) {
     val scrollState = rememberScrollState()
+    val booth = viewmodel.selectedBooth
+    val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(booth.name) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
+    booth?.let {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = booth.name,
+                            color = white,
+                            fontStyle = FontStyle.Normal,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 25.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = white)
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = saffron,
+                        titleContentColor = white,
+                        actionIconContentColor = white
+                    )
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .verticalScroll(scrollState)
+                    .background(white)
+            ) {
+                ImageSlider(booth.images)
+                BoothInfo(booth) {
+                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${booth.bloContact}"))
+                    context.startActivity(intent)
                 }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(scrollState)
-        ) {
-            ImageSlider(booth.images)
-            BoothInfo(booth)
+            }
         }
     }
 }
@@ -83,19 +97,19 @@ fun ImageSlider(images: List<Uri>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .background(Color.Gray),
+                .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
-            Text("No images available", color = Color.White)
+            Text("No images available", color = Color.DarkGray)
         }
         return
     }
 
-    var currentImageIndex by remember { mutableStateOf(0) }
+    var currentImageIndex by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(3000) // Change image every 3 seconds
+            delay(3000)
             currentImageIndex = (currentImageIndex + 1) % images.size
         }
     }
@@ -103,7 +117,7 @@ fun ImageSlider(images: List<Uri>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(250.dp)
     ) {
         Image(
             painter = rememberAsyncImagePainter(
@@ -116,7 +130,6 @@ fun ImageSlider(images: List<Uri>) {
             contentScale = ContentScale.Crop
         )
 
-        // Image indicators
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -130,9 +143,7 @@ fun ImageSlider(images: List<Uri>) {
                         .size(8.dp)
                         .clip(CircleShape)
                         .background(
-                            if (index == currentImageIndex) Color.White else Color.Gray.copy(
-                                alpha = 0.5f
-                            )
+                            if (index == currentImageIndex) white else Color.Gray.copy(alpha = 0.5f)
                         )
                 )
             }
@@ -141,45 +152,52 @@ fun ImageSlider(images: List<Uri>) {
 }
 
 @Composable
-fun BoothInfo(booth: Booth) {
+fun BoothInfo(booth: Booth, onCallBLO: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        InfoItem("Booth ID", booth.id)
-        InfoItem("District", booth.district)
-        InfoItem("Taluka", booth.taluka)
-        InfoItem("Latitude", booth.latitude.toString())
-        InfoItem("Longitude", booth.longitude.toString())
-        InfoItem("BLO Name", booth.bloName)
-        InfoItem("BLO Contact", booth.bloContact)
+        InfoItem("Booth ID", booth.id, saffron)
+        InfoItem("District", booth.district, saffron)
+        InfoItem("Taluka", booth.taluka, saffron)
+        InfoItem("BLO Name", booth.bloName, saffron)
+
+        Spacer(modifier =   Modifier.height(25.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("BLO Contact", fontWeight = FontWeight.Bold, color = saffron)
+                Text(booth.bloContact, color = Color.Black)
+            }
+            IconButton(
+                onClick = onCallBLO,
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(green, CircleShape)
+            ) {
+                Icon(Icons.Default.Call, contentDescription = "Call BLO", tint = white)
+            }
+        }
     }
 }
 
 @Composable
-fun InfoItem(label: String, value: String) {
-    Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text(label, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-        Text(value, color = MaterialTheme.colorScheme.onSurface)
+fun InfoItem(label: String, value: String, backgroundColor: Color) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(label, fontWeight = FontWeight.Bold, color = Color.White)
+            Text(value, color = Color.White)
+        }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun BoothDetailsScreenPreview() {
-//    BoothDetailsScreen(
-//        navController = NavController(LocalContext.current),
-//        booth = Booth(
-//            name = "Parbhani Central Booth",
-//            id = "PRB001",
-//            latitude = 19.2645,
-//            longitude = 76.7816,
-//            district = "Parbhani",
-//            taluka = "Parbhani City",
-//            bloName = "John Doe",
-//            bloContact = "1234567890"
-//        )
-//    )
-//
-//}

@@ -1,9 +1,9 @@
 package com.swag.boothmap.navigation
 
 
+import BoothDetailsScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import com.swag.boothmap.screens.CitySelectionScreen
 import com.swag.boothmap.screens.MainScaffoldScreen
 import com.swag.boothmap.screens.SplashScreen
+import com.swag.boothmap.viewmodels.BoothViewmodel
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 
@@ -20,8 +21,8 @@ import com.swag.boothmap.viewmodels.LocationDataViewModel
 @Composable
 fun Navigation(
     navController: NavHostController,
-    paddingValues: PaddingValues,
-    viewModel: LocationDataViewModel
+    locationVM: LocationDataViewModel,
+    boothVM: BoothViewmodel
 ) {
     NavHost(navController = navController, startDestination = Screen.Splashscreen.route) {
         composable(route = Screen.MainScaffoldScreen.route+"/{selectedCity}", arguments = listOf(
@@ -30,7 +31,7 @@ fun Navigation(
             })) {
 
                 it.arguments?.getString("selectedCity")
-                    ?.let { it1 -> MainScaffoldScreen(navController, it1, viewModel = viewModel) }
+                    ?.let { it1 -> MainScaffoldScreen(navController = navController, it1, locationVM = locationVM, boothVM = boothVM) }
         }
 
         composable(Screen.Splashscreen.route) {
@@ -38,11 +39,11 @@ fun Navigation(
         }
 
         composable(Screen.CitySelectionScreen.route) {
-            CitySelectionScreen(navController = navController, viewModel = viewModel)
+            CitySelectionScreen(navController = navController, viewModel = locationVM)
         }
 
         composable(Screen.BoothdetailsScreen.route) {
-            //TODO() Parse an object through navigation
+            BoothDetailsScreen(navController = navController, boothVM)
         }
     }
 }

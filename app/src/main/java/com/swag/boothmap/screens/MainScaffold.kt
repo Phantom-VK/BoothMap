@@ -16,22 +16,22 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.swag.boothmap.R
 import com.swag.boothmap.ui.theme.saffron
+import com.swag.boothmap.viewmodels.BoothViewmodel
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffoldScreen(
-    navHostController: NavHostController,
+    navController: NavController,
     selectedCity: String,
-    viewModel: LocationDataViewModel
+    locationVM: LocationDataViewModel,
+    boothVM: BoothViewmodel
 ) {
     val mapStyle = R.raw.map_light_style
-
-
 
 
     Scaffold(
@@ -43,7 +43,7 @@ fun MainScaffoldScreen(
                         color = Color.White,
                         fontStyle = FontStyle.Normal,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -68,10 +68,13 @@ fun MainScaffoldScreen(
 
 
             Mapscreen(
+                navController = navController,
                 mapStyle = mapStyle,
                 paddingValues = paddingValues,
                 selectedCity = selectedCity,
-                viewModel = viewModel
+                locationVM = locationVM,
+                boothVM = boothVM
+
             )
 
     }

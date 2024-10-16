@@ -1,6 +1,5 @@
 package com.swag.boothmap.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swag.boothmap.datacalsses.Booth
@@ -68,7 +67,6 @@ class LocationDataViewModel : ViewModel() {
     fun getListOfCities(): List<String> = listOfCities
 
     fun getListOfTalukas(): List<String> {
-        Log.d("LocationVM", "getListOfTalukas called with booths: ${_booths.value}")
         return _booths.value.map { it.taluka }.distinct()
     }
 }

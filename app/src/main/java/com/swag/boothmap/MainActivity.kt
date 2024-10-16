@@ -6,10 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.compose.rememberNavController
 import com.swag.boothmap.navigation.Navigation
 import com.swag.boothmap.ui.theme.BoothMapTheme
+import com.swag.boothmap.viewmodels.BoothViewmodel
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 class MainActivity : ComponentActivity() {
@@ -17,12 +17,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val locationVM = LocationDataViewModel()
+        val boothVM = BoothViewmodel()
         setContent {
             BoothMapTheme {
 
                     Navigation(navController = rememberNavController(),
-                        paddingValues = PaddingValues(),
-                        viewModel = LocationDataViewModel()
+                        locationVM = locationVM,
+                        boothVM = boothVM
                     )
 
             }
