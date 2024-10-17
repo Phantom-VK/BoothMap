@@ -3,7 +3,6 @@ package com.swag.boothmap.repository
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.swag.boothmap.datacalsses.Booth
@@ -42,7 +41,7 @@ class Database {
                         val id = map["id"] as? String ?: ""
                         val name = map["name"] as? String ?: ""
                         val taluka = map["taluka"] as? String ?: ""
-                        val bloname = map["bloname"] as? String ?: ""
+                        val bloname = map["bloName"] as? String ?: ""
                         val bloContact = map["bloContact"] as? String ?: ""
                         val district = map["district"] as? String ?: city
                         val latitude = (map["latitude"] as? Number)?.toDouble() ?: 0.0
