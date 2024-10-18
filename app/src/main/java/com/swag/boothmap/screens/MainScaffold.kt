@@ -1,6 +1,5 @@
 package com.swag.boothmap.screens
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -10,14 +9,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.swag.boothmap.R
-import com.swag.boothmap.navigation.Screen
 import com.swag.boothmap.ui.theme.saffron
 import com.swag.boothmap.viewmodels.BoothViewmodel
 import com.swag.boothmap.viewmodels.LocationDataViewModel
@@ -32,7 +29,6 @@ fun MainScaffoldScreen(
     boothVM: BoothViewmodel
 ) {
     val mapStyle = R.raw.map_light_style
-    val context = LocalContext.current
 
     BackHandler {
         locationVM.resetSelections()

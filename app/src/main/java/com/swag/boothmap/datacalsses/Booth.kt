@@ -1,6 +1,5 @@
 package com.swag.boothmap.datacalsses
 
-import android.net.Uri
 
 data class Booth(
     val name:String = "",
@@ -11,5 +10,5 @@ data class Booth(
     val taluka:String = "",
     val bloName:String = "",
     val bloContact: String = "",
-    val images:List<Uri> = emptyList()
+    val images:String = ""
 )

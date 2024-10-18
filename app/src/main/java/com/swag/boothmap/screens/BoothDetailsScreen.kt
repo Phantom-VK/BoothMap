@@ -1,5 +1,6 @@
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.swag.boothmap.datacalsses.Booth
@@ -80,7 +82,7 @@ fun BoothDetailsScreen(
                     .verticalScroll(scrollState)
                     .background(white)
             ) {
-                ImageSlider(booth.images)
+                ImageDisplay(booth.images)
                 BoothInfo(booth) {
                     val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${booth.bloContact}"))
                     context.startActivity(intent)
@@ -91,62 +93,58 @@ fun BoothDetailsScreen(
 }
 
 @Composable
-fun ImageSlider(images: List<Uri>) {
-    if (images.isEmpty()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(Color.LightGray),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("No images available", color = Color.DarkGray)
-        }
-        return
-    }
-
-    var currentImageIndex by remember { mutableIntStateOf(0) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(3000)
-            currentImageIndex = (currentImageIndex + 1) % images.size
-        }
-    }
-
+fun ImageDisplay(imageUrl: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = images[currentImageIndex])
-                    .build()
-            ),
-            contentDescription = "Booth Image",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            images.forEachIndexed { index, _ ->
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(
-                            if (index == currentImageIndex) white else Color.Gray.copy(alpha = 0.5f)
-                        )
-                )
+        if (imageUrl.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.LightGray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No image available", color = Color.DarkGray)
             }
+        } else {
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = imageUrl)
+                        .build()
+                ),
+                contentDescription = "Booth Image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+
+//            // Optional: Add a loading state
+//            val imageState = (rememberAsyncImagePainter(imageUrl)).state
+//            if (imageState is AsyncImagePainter.State.Loading) {
+//                Box(
+//                    modifier = Modifier.fillMaxSize(),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    CircularProgressIndicator(color = white)
+//                }
+//            }
+
+//            // Optional: Handle error state
+//            if (imageState is AsyncImagePainter.State.Error) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(Color.LightGray),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        "Error loading image",
+//                        color = Color.DarkGray
+//                    )
+//                }
+//            }
         }
     }
 }
