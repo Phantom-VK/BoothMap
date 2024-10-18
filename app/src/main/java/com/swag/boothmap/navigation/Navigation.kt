@@ -39,7 +39,7 @@ fun Navigation(
         }
 
         composable(Screen.CitySelectionScreen.route) {
-            CitySelectionScreen(navController = navController, viewModel = locationVM)
+            CitySelectionScreen(navController = navController, locationVM = locationVM )
         }
 
         composable(Screen.BoothdetailsScreen.route) {

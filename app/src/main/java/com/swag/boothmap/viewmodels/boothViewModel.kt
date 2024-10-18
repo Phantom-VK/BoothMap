@@ -5,7 +5,4 @@ import com.swag.boothmap.datacalsses.Booth
 
 class BoothViewmodel(): ViewModel() {
     var selectedBooth : Booth? = null
-
-
-
 }

@@ -39,13 +39,14 @@ import com.swag.boothmap.viewmodels.UiState
 @Composable
 fun CitySelectionScreen(
     navController: NavController,
-    viewModel: LocationDataViewModel
+    locationVM: LocationDataViewModel
 ) {
-    val selectedCity by viewModel.selectedCity.collectAsState()
-    val selectedTaluka by viewModel.selectedTaluka.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
-    val cities = viewModel.getListOfCities()
-    val talukas = viewModel.getListOfTalukas()
+    val selectedCity by locationVM.selectedCity.collectAsState()
+    val selectedTaluka by locationVM.selectedTaluka.collectAsState()
+    val selectedBooth by locationVM.selectedBooth.collectAsState()
+    val uiState by locationVM.uiState.collectAsState()
+    val cities = locationVM.getListOfCities()
+    val talukas = locationVM.getListOfTalukas()
 
     val context = LocalContext.current
 
@@ -63,11 +64,22 @@ fun CitySelectionScreen(
     ) {
         Logo()
         Title()
-        OptionsDropdown(cities = cities, talukas = talukas, viewModel = viewModel)
+        OptionsDropdown(
+            cities = cities,
+            talukas = talukas,
+            locationVM = locationVM,
+            selectedCity = selectedCity,
+            selectedBooth = selectedBooth,
+            selectedTaluka = selectedTaluka
+        )
         NavigationButton(
-            navController = navController,
+            onClick = {
+                navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity")
+
+            },
             selectedCity = selectedCity,
             selectedTaluka = selectedTaluka,
+            selectedBooth = selectedBooth,
             isLoading = uiState is UiState.LoadingBooths
         )
     }
@@ -106,20 +118,22 @@ private fun Title() {
 
 @Composable
 private fun NavigationButton(
-    navController: NavController,
+    onClick: () -> Unit,
     selectedCity: String?,
     selectedTaluka: String?,
+    selectedBooth: String?,
     isLoading: Boolean
 ) {
     Button(
         onClick = {
-            navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity")
+            onClick()
+
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF000080),
             contentColor = Color.White,
         ),
-        enabled = selectedCity != null && selectedTaluka != null && !isLoading
+        enabled = selectedCity != null && selectedTaluka != null && !isLoading && selectedBooth != null
     ) {
         if (isLoading) {
             CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))

@@ -1,5 +1,6 @@
 package com.swag.boothmap.screens.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,15 +40,15 @@ import com.swag.boothmap.viewmodels.LocationDataViewModel
 fun OptionsDropdown(
     cities: List<String>,
     talukas: List<String>,
-    viewModel: LocationDataViewModel
+    selectedCity: String? = null,
+    selectedTaluka: String? = null,
+    selectedBooth: String? = null,
+    locationVM: LocationDataViewModel
 ) {
 
     var expandedCity by remember { mutableStateOf(false) }
     var expandedTaluka by remember { mutableStateOf(false) }
-    val selectedCity by viewModel.selectedCity.collectAsState()
-    val selectedTaluka by viewModel.selectedTaluka.collectAsState()
-
-
+    var expandedBooths by remember { mutableStateOf(false) }
 
 
 
@@ -101,7 +102,7 @@ fun OptionsDropdown(
                     DropdownMenuItem(
                         text = { Text(city) },
                         onClick = {
-                            viewModel.selectCity(city)
+                            locationVM.selectCity(city)
                             expandedCity = false
                         }
                     )
@@ -153,8 +154,64 @@ fun OptionsDropdown(
                     DropdownMenuItem(
                         text = { Text(taluka) },
                         onClick = {
-                            viewModel.selectTaluka(taluka)
+                            locationVM.selectTaluka(taluka)
                             expandedTaluka = false
+                        }
+                    )
+                }
+            }
+        }
+
+        // Booth Dropdown
+        ExposedDropdownMenuBox(
+            expanded = expandedBooths,
+            onExpandedChange = { expandedBooths = !expandedBooths },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+
+
+            OutlinedButton(
+                onClick = { expandedBooths = true },
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = green,
+                    contentColor = white
+                ),
+                border = BorderStroke(1.dp, saffron),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
+            ) {
+                    Text(
+                        text = selectedBooth ?: "Select Booth",
+                        fontStyle = FontStyle.Normal,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                        color = white
+                    )
+
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "Taluka",
+                    tint = white
+                )
+            }
+            ExposedDropdownMenu(
+                expanded = expandedBooths,
+                onDismissRequest = { expandedBooths = false }
+            ) {
+                locationVM.getListOfBooths().forEach { booth ->
+                    Log.d("Testing", "Selected boots $booth")
+                    DropdownMenuItem(
+                        text = {
+                            Text(booth)
+                        },
+                        onClick = {
+                            locationVM.selectBooth(booth)
+                            expandedBooths = false
                         }
                     )
                 }

@@ -1,6 +1,8 @@
 package com.swag.boothmap.screens
 
-import android.util.Log
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,15 +61,22 @@ fun Mapscreen(
     navController: NavController,
     mapStyle: Int,
     paddingValues: PaddingValues,
-    selectedCity:String,
+    selectedCity: String,
     locationVM: LocationDataViewModel,
     boothVM: BoothViewmodel
 ) {
     val booths by locationVM.booths.collectAsState()
+    var selectedBooth by remember { mutableStateOf<Booth?>(null) }
+    val context = LocalContext.current
 
+    // Default location (you can set this to your city's center coordinates)
+    val defaultLocation = LatLng(19.1383, 77.3210) // Default coordinates for Maharashtra
 
-    val initialLocation = booths[0].let { LatLng(it.latitude, it.longitude) }
-
+    val initialLocation = if (booths.isNotEmpty()) {
+        booths[0].let { LatLng(it.latitude, it.longitude) }
+    } else {
+        defaultLocation
+    }
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialLocation, 13f)
@@ -79,8 +88,6 @@ fun Mapscreen(
             durationMs = 1000
         )
     }
-
-    var selectedBooth by remember { mutableStateOf<Booth?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
@@ -94,17 +101,21 @@ fun Mapscreen(
                 )
             )
         ) {
-            booths.forEach { booth ->
-                Marker(
-                    state = MarkerState(position = LatLng(booth.latitude, booth.longitude)),
-                    title = booth.name,
-                    snippet = booth.taluka,
-                    icon = BitmapDescriptorFactory.defaultMarker(),
-                    onClick = {
-                        selectedBooth = booth
-                        false
-                    }
-                )
+            if (booths.isNotEmpty()) {
+
+                booths.forEach { booth ->
+                    selectedBooth = booth
+                    Marker(
+                        state = MarkerState(position = LatLng(booth.latitude, booth.longitude)),
+                        title = booth.name,
+                        snippet = booth.taluka,
+                        icon = BitmapDescriptorFactory.defaultMarker(),
+                        onClick = {
+
+                            false
+                        }
+                    )
+                }
             }
         }
 
@@ -112,8 +123,9 @@ fun Mapscreen(
             Card(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(bottom = paddingValues.calculateBottomPadding())
-                    .width(260.dp),
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = paddingValues.calculateBottomPadding()),
                 shape = RoundedCornerShape(8.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = saffron,
@@ -135,21 +147,48 @@ fun Mapscreen(
                     Text("BLO: ${booth.bloName}", style = MaterialTheme.typography.bodySmall)
                     Text("Contact: ${booth.bloContact}", style = MaterialTheme.typography.bodySmall)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = {
-
-                            boothVM.selectedBooth = booth
-                            navController.navigate(Screen.BoothdetailsScreen.route)
-
-
-                                  },
-                        modifier = Modifier.align(Alignment.End),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = green,
-                            contentColor = white
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("View Details")
+                        Button(
+                            onClick = {
+                                boothVM.selectedBooth = booth
+                                navController.navigate(Screen.BoothdetailsScreen.route)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = green,
+                                contentColor = white
+                            )
+                        ) {
+                            Text("View Details")
+                        }
+
+                        Button(
+                            onClick = {
+                                // Open Google Maps with directions
+                                val uri = Uri.parse(
+                                    "google.navigation:q=${booth.latitude},${booth.longitude}"
+                                )
+                                val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+                                try {
+                                    context.startActivity(mapIntent)
+                                } catch (e: ActivityNotFoundException) {
+                                    // If Google Maps is not installed, open in browser
+                                    val browserUri = Uri.parse(
+                                        "https://www.google.com/maps/dir/?api=1&destination=${booth.latitude},${booth.longitude}"
+                                    )
+                                    val browserIntent = Intent(Intent.ACTION_VIEW, browserUri)
+                                    context.startActivity(browserIntent)
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = white
+                            )
+                        ) {
+                            Text("Get Directions")
+                        }
                     }
                 }
             }

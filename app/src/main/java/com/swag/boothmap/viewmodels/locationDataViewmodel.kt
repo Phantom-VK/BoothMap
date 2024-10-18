@@ -20,6 +20,9 @@ class LocationDataViewModel : ViewModel() {
     private val _selectedTaluka = MutableStateFlow<String?>(null)
     val selectedTaluka: StateFlow<String?> = _selectedTaluka
 
+    private val _selectedBooth = MutableStateFlow<String?>(null)
+    val selectedBooth: StateFlow<String?> = _selectedBooth
+
     private val _uiState = MutableStateFlow<UiState>(UiState.LoadingCities)
     val uiState: StateFlow<UiState> = _uiState
 
@@ -59,15 +62,31 @@ class LocationDataViewModel : ViewModel() {
         fetchBooths(city)
     }
 
-    fun selectTaluka(taluka: String) {
+    fun resetSelections() {
+        _selectedCity.value = null
+        _selectedTaluka.value = null
+        _selectedBooth.value = null
+        _booths.value = emptyList()
+        _uiState.value = UiState.CitiesLoaded
+    }
+
+    fun selectTaluka(taluka: String?) {
         _selectedTaluka.value = taluka
+
         _booths.value = _booths.value.filter { it.taluka == taluka }
+    }
+
+    fun selectBooth(taluka: String?) {
+        _selectedBooth.value = taluka
     }
 
     fun getListOfCities(): List<String> = listOfCities
 
     fun getListOfTalukas(): List<String> {
         return _booths.value.map { it.taluka }.distinct()
+    }
+    fun getListOfBooths(): List<String> {
+        return _booths.value.map { it.name }.distinct()
     }
 }
 
