@@ -61,31 +61,39 @@ fun Mapscreen(
     mapStyle: Int,
     paddingValues: PaddingValues,
     selectedCity: String,
+    selectedBooth: String, // selectedBooth from the booth list
     locationVM: LocationDataViewModel,
     boothVM: BoothViewmodel
 ) {
     val booths by locationVM.booths.collectAsState()
-    var selectedBooth by remember { mutableStateOf<Booth?>(null) }
+    var selectedBoothData by remember { mutableStateOf<Booth?>(null) } // Selected booth data
     val context = LocalContext.current
 
-    // Default location (you can set this to your city's center coordinates)
+    // Default location
     val defaultLocation = LatLng(19.1383, 77.3210) // Default coordinates for Maharashtra
 
-    val initialLocation = if (booths.isNotEmpty()) {
-        booths[0].let { LatLng(it.latitude, it.longitude) }
-    } else {
-        defaultLocation
+    // Find the selected booth based on the selectedBooth ID
+    LaunchedEffect(selectedBooth) {
+        selectedBoothData = booths.find { it.name == selectedBooth } // Assuming boothId is unique
     }
+
+    val initialLocation = selectedBoothData?.let {
+        LatLng(it.latitude, it.longitude)
+    } ?: defaultLocation
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialLocation, 13f)
     }
 
-    LaunchedEffect(selectedCity) {
-        cameraPositionState.animate(
-            update = CameraUpdateFactory.newLatLngZoom(initialLocation, 13f),
-            durationMs = 1000
-        )
+    LaunchedEffect(selectedBoothData) {
+        selectedBoothData?.let { booth ->
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngZoom(
+                    LatLng(booth.latitude, booth.longitude), 13f
+                ),
+                durationMs = 1000
+            )
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -100,25 +108,20 @@ fun Mapscreen(
                 )
             )
         ) {
-            if (booths.isNotEmpty()) {
-
-                booths.forEach { booth ->
-                    selectedBooth = booth
-                    Marker(
-                        state = MarkerState(position = LatLng(booth.latitude, booth.longitude)),
-                        title = booth.name,
-                        snippet = booth.taluka,
-                        icon = BitmapDescriptorFactory.defaultMarker(),
-                        onClick = {
-
-                            false
-                        }
-                    )
-                }
+            selectedBoothData?.let { booth ->
+                Marker(
+                    state = MarkerState(position = LatLng(booth.latitude, booth.longitude)),
+                    title = booth.name,
+                    snippet = booth.taluka,
+                    icon = BitmapDescriptorFactory.defaultMarker(),
+                    onClick = {
+                        false
+                    }
+                )
             }
         }
 
-        selectedBooth?.let { booth ->
+        selectedBoothData?.let { booth ->
             Card(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -138,7 +141,7 @@ fun Mapscreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(booth.name, style = MaterialTheme.typography.titleMedium)
-                        IconButton(onClick = { selectedBooth = null }) {
+                        IconButton(onClick = { selectedBoothData = null }) {
                             Icon(Icons.Filled.Close, contentDescription = "Close")
                         }
                     }
@@ -194,5 +197,6 @@ fun Mapscreen(
         }
     }
 }
+
 
 

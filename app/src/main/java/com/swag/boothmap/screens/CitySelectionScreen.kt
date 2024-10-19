@@ -74,7 +74,8 @@ fun CitySelectionScreen(
         )
         NavigationButton(
             onClick = {
-                navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity")
+                navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity/$selectedBooth")
+
 
             },
             selectedCity = selectedCity,

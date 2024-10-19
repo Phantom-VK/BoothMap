@@ -25,13 +25,29 @@ fun Navigation(
     boothVM: BoothViewmodel
 ) {
     NavHost(navController = navController, startDestination = Screen.Splashscreen.route) {
-        composable(route = Screen.MainScaffoldScreen.route+"/{selectedCity}", arguments = listOf(
-            navArgument(name = "selectedCity"){
-                type = NavType.StringType
-            })) {
+        composable(
+            route = Screen.MainScaffoldScreen.route + "/{selectedCity}/{selectedBooth}",
+            arguments = listOf(
+                navArgument(name = "selectedCity") {
+                    type = NavType.StringType
+                },
+                navArgument(name = "selectedBooth") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val selectedCity = backStackEntry.arguments?.getString("selectedCity")
+            val selectedBooth = backStackEntry.arguments?.getString("selectedBooth")
 
-                it.arguments?.getString("selectedCity")
-                    ?.let { it1 -> MainScaffoldScreen(navController = navController, it1, locationVM = locationVM, boothVM = boothVM) }
+            if (selectedCity != null && selectedBooth != null) {
+                MainScaffoldScreen(
+                    navController = navController,
+                    selectedCity = selectedCity,
+                    selectedBooth = selectedBooth,
+                    locationVM = locationVM,
+                    boothVM = boothVM
+                )
+            }
         }
 
         composable(Screen.Splashscreen.route) {
