@@ -42,7 +42,6 @@ fun Navigation(
             if (selectedCity != null && selectedBooth != null) {
                 MainScaffoldScreen(
                     navController = navController,
-                    selectedCity = selectedCity,
                     selectedBooth = selectedBooth,
                     locationVM = locationVM,
                     boothVM = boothVM

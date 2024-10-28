@@ -60,7 +60,6 @@ fun Mapscreen(
     navController: NavController,
     mapStyle: Int,
     paddingValues: PaddingValues,
-    selectedCity: String,
     selectedBooth: String, // selectedBooth from the booth list
     locationVM: LocationDataViewModel,
     boothVM: BoothViewmodel

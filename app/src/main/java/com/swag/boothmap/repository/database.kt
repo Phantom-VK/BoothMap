@@ -1,5 +1,6 @@
 package com.swag.boothmap.repository
 
+import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,6 +21,7 @@ class Database {
                 val cities = mutableListOf<String>()
                 for (citySnapshot in snapshot.children) {
                     val cityName = citySnapshot.key ?: continue
+                    Log.d("Testing", cityName)
                     cities.add(cityName)
                 }
                 continuation.resume(cities)

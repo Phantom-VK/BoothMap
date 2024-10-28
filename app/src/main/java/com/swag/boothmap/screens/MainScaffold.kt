@@ -25,7 +25,6 @@ import com.swag.boothmap.viewmodels.LocationDataViewModel
 fun MainScaffoldScreen(
     navController: NavController,
     selectedBooth: String,
-    selectedCity: String,
     locationVM: LocationDataViewModel,
     boothVM: BoothViewmodel
 ) {
@@ -65,7 +64,6 @@ fun MainScaffoldScreen(
                 navController = navController,
                 mapStyle = mapStyle,
                 paddingValues = paddingValues,
-                selectedCity = selectedCity,
                 selectedBooth = selectedBooth,
                 locationVM = locationVM,
                 boothVM = boothVM

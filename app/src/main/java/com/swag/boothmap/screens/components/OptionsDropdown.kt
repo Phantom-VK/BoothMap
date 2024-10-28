@@ -204,7 +204,6 @@ fun OptionsDropdown(
                 onDismissRequest = { expandedBooths = false }
             ) {
                 locationVM.getListOfBooths().forEach { booth ->
-                    Log.d("Testing", "Selected boots $booth")
                     DropdownMenuItem(
                         text = {
                             Text(booth)
