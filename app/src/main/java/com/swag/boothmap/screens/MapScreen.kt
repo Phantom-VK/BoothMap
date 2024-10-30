@@ -140,9 +140,7 @@ fun Mapscreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(booth.name, style = MaterialTheme.typography.titleMedium)
-                        IconButton(onClick = { selectedBoothData = null }) {
-                            Icon(Icons.Filled.Close, contentDescription = "Close")
-                        }
+
                     }
                     Text(booth.taluka, style = MaterialTheme.typography.bodyMedium)
                     Text("BLO: ${booth.bloName}", style = MaterialTheme.typography.bodySmall)

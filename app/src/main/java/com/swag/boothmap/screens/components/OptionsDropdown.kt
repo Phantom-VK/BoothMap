@@ -1,6 +1,5 @@
 package com.swag.boothmap.screens.components
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,18 +20,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.swag.boothmap.ui.theme.green
 import com.swag.boothmap.ui.theme.saffron
-import com.swag.boothmap.ui.theme.white
 import com.swag.boothmap.viewmodels.LocationDataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,22 +43,20 @@ fun OptionsDropdown(
     selectedBooth: String? = null,
     locationVM: LocationDataViewModel
 ) {
-
     var expandedCity by remember { mutableStateOf(false) }
     var expandedTaluka by remember { mutableStateOf(false) }
     var expandedBooths by remember { mutableStateOf(false) }
 
-
-
+    val eciBlue = Color(0xFF7CB9E8)    // Light blue for dots
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .background(white, RoundedCornerShape(8.dp))
-            .border(1.dp, green, RoundedCornerShape(8.dp))
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
     ) {
-        // City Dropdown
+        // City Dropdown (Saffron)
         ExposedDropdownMenuBox(
             expanded = expandedCity,
             onExpandedChange = { expandedCity = !expandedCity },
@@ -72,27 +68,31 @@ fun OptionsDropdown(
                 onClick = { expandedCity = true },
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = saffron,
-                    contentColor = white
+                    contentColor = Color.White
                 ),
-                border = BorderStroke(1.dp, green),
+                border = BorderStroke(2.dp, Color.Black),
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
+                    .height(55.dp)
             ) {
                 Text(
                     text = selectedCity ?: "Select City",
                     fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                    color = white
+                    color = Color.White
                 )
                 Spacer(Modifier.weight(1f))
-                Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "City",
-                    tint = white
-                )
+
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                        tint = eciBlue,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
             }
             ExposedDropdownMenu(
                 expanded = expandedCity,
@@ -103,6 +103,8 @@ fun OptionsDropdown(
                         text = { Text(city) },
                         onClick = {
                             locationVM.selectCity(city)
+                            locationVM.selectBooth(null)
+                            locationVM.selectTaluka(null)
                             expandedCity = false
                         }
                     )
@@ -112,7 +114,7 @@ fun OptionsDropdown(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Taluka Dropdown
+        // Taluka Dropdown (White)
         ExposedDropdownMenuBox(
             expanded = expandedTaluka,
             onExpandedChange = { expandedTaluka = !expandedTaluka },
@@ -123,27 +125,29 @@ fun OptionsDropdown(
             OutlinedButton(
                 onClick = { expandedTaluka = true },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = green,
-                    contentColor = white
+                    containerColor = Color.White,
+                    contentColor = Color.Black
                 ),
-                border = BorderStroke(1.dp, saffron),
+                border = BorderStroke(2.dp, Color.Black),
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
+                    .height(55.dp)
             ) {
                 Text(
                     text = selectedTaluka ?: "Select Taluka",
                     fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                    color = white
+                    color = Color.Black
                 )
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "Taluka",
-                    tint = white
+                    contentDescription = null,
+                    tint = eciBlue,
+                    modifier = Modifier.padding(end = 4.dp)
                 )
             }
             ExposedDropdownMenu(
@@ -155,6 +159,7 @@ fun OptionsDropdown(
                         text = { Text(taluka) },
                         onClick = {
                             locationVM.selectTaluka(taluka)
+                            locationVM.selectBooth(null)
                             expandedTaluka = false
                         }
                     )
@@ -162,7 +167,9 @@ fun OptionsDropdown(
             }
         }
 
-        // Booth Dropdown
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Booth Dropdown (Green)
         ExposedDropdownMenuBox(
             expanded = expandedBooths,
             onExpandedChange = { expandedBooths = !expandedBooths },
@@ -170,33 +177,32 @@ fun OptionsDropdown(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-
-
             OutlinedButton(
                 onClick = { expandedBooths = true },
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = green,
-                    contentColor = white
+                    contentColor = Color.White
                 ),
-                border = BorderStroke(1.dp, saffron),
+                border = BorderStroke(2.dp, Color.Black),
                 shape = RoundedCornerShape(4.dp),
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth()
+                    .height(55.dp)
             ) {
-                    Text(
-                        text = selectedBooth ?: "Select Booth",
-                        fontStyle = FontStyle.Normal,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = MaterialTheme.typography.titleMedium.fontSize,
-                        color = white
-                    )
-
+                Text(
+                    text = selectedBooth ?: "Select Booth",
+                    fontStyle = FontStyle.Normal,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                    color = Color.White
+                )
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = "Taluka",
-                    tint = white
+                    contentDescription = null,
+                    tint = eciBlue,
+                    modifier = Modifier.padding(end = 4.dp)
                 )
             }
             ExposedDropdownMenu(
@@ -205,9 +211,7 @@ fun OptionsDropdown(
             ) {
                 locationVM.getListOfBooths().forEach { booth ->
                     DropdownMenuItem(
-                        text = {
-                            Text(booth)
-                        },
+                        text = { Text(booth) },
                         onClick = {
                             locationVM.selectBooth(booth)
                             expandedBooths = false

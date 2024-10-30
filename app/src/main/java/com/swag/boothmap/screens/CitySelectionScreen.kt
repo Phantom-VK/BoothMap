@@ -7,7 +7,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AlertDialog
@@ -59,10 +64,12 @@ fun CitySelectionScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
-        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(Modifier.height(30.dp))
         Logo()
+
+        Spacer(Modifier.height(40.dp))
         Title()
         OptionsDropdown(
             cities = cities,
@@ -72,6 +79,7 @@ fun CitySelectionScreen(
             selectedBooth = selectedBooth,
             selectedTaluka = selectedTaluka
         )
+        Spacer(Modifier.height(20.dp))
         NavigationButton(
             onClick = {
                 navController.navigate(Screen.MainScaffoldScreen.route + "/$selectedCity/$selectedBooth")
@@ -126,6 +134,9 @@ private fun NavigationButton(
     isLoading: Boolean
 ) {
     Button(
+        modifier = Modifier.fillMaxWidth()
+            .padding(16.dp)
+            .height(50.dp),
         onClick = {
             onClick()
 

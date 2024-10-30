@@ -1,5 +1,6 @@
 package com.swag.boothmap.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swag.boothmap.datacalsses.Booth
@@ -8,11 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
 class LocationDataViewModel : ViewModel() {
     private val database = Database()
     private val _booths = MutableStateFlow<List<Booth>>(emptyList())
     val booths: StateFlow<List<Booth>> = _booths
+
 
     private val _selectedCity = MutableStateFlow<String?>(null)
     val selectedCity: StateFlow<String?> = _selectedCity
@@ -70,14 +71,16 @@ class LocationDataViewModel : ViewModel() {
         _uiState.value = UiState.CitiesLoaded
     }
 
-    fun selectTaluka(taluka: String?) {
+    fun selectTaluka(taluka: String?): List<Booth> {
         _selectedTaluka.value = taluka
 
-        _booths.value = _booths.value.filter { it.taluka == taluka }
+        // Return a new filtered list without modifying _booths
+        return _booths.value.filter { it.taluka == taluka }.toList()
     }
 
     fun selectBooth(taluka: String?) {
         _selectedBooth.value = taluka
+
     }
 
     fun getListOfCities(): List<String> = listOfCities
@@ -86,7 +89,7 @@ class LocationDataViewModel : ViewModel() {
         return _booths.value.map { it.taluka }.distinct()
     }
     fun getListOfBooths(): List<String> {
-        return _booths.value.map { it.name }.distinct()
+        return _booths.value.filter { it.taluka == _selectedTaluka.value }.map { it.name }
     }
 }
 
