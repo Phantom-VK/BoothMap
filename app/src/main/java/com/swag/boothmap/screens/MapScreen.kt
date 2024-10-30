@@ -182,7 +182,7 @@ fun Mapscreen(
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
+                                containerColor = green,
                                 contentColor = white
                             )
                         ) {
